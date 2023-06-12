@@ -15,6 +15,10 @@ struct ContentView: View {
     
     @State private var isPresented = false
     
+    @State var emailId = ""
+    @State var fName = ""
+    @State var lName = ""
+    
     
     var body: some View {
         NavigationStack {
@@ -22,7 +26,7 @@ struct ContentView: View {
                 VStack {
                     Spacer()
                     SignInWithAppleButton(.continue){request  in
-                        request.requestedScopes = [.email,.fullName,]
+                        request.requestedScopes = [.email,.fullName]
                     } onCompletion: { result in
                         switch result {
                         case .success(let auth):
@@ -61,9 +65,6 @@ struct ContentView: View {
                 .navigationTitle("Sign In")
                 .padding()
                 .sheet(isPresented: $isPresented){
-                    @State var emailId = ""
-                    @State var fName = ""
-                    @State var lName = ""
                     List {
                         Section("Email"){
                             TextField("Enter Email", text: $emailId)
@@ -72,31 +73,16 @@ struct ContentView: View {
                             TextField("Enter First Name", text: $fName)
                             TextField("Enter Last Name", text: $lName)
                         }
-                        if emailId.isEmpty && fName.isEmpty && lName.isEmpty {
-                            Button("Save"){
-                                email = emailId
-                                firstName = fName
-                                lastName = lName
-                                isPresented.toggle()
-                            }
+                        Button("Save"){
+                            email = emailId
+                            firstName = fName
+                            lastName = lName
+                            isPresented.toggle()
                         }
+
                     }
                     .padding()
                     
-                }
-                .toolbar(){
-                    Menu{
-                        Button("Sign out"){
-                            email = ""
-                            firstName = ""
-                            lastName = ""
-                            userId = ""
-                        }
-                    }label: {
-                        Image(systemName: "line.3.horizontal")
-                            .font(.title)
-                            .clipShape(RoundedRectangle(cornerRadius: 15.0))
-                    }
                 }
             }
             else{
